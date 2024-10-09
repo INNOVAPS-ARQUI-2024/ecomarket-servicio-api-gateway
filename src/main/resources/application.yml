@@ -1,0 +1,85 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+          cors-configurations:
+            '[/**]':
+              allowedOrigins: "http://localhost:4200"
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+              allowedHeaders: "*"
+              allowCredentials: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # Servicio Control de Usuarios
+        - id: control-usuarios
+          uri: lb://ECOMARKET-SERVICIO-CONTROL-USUARIOS
+          predicates:
+            - Path=/api/usuarios/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Productos y Servicios
+        - id: productos-servicios
+          uri: lb://ECOMARKET-SERVICIO-PRODUCTOS-SERVICIOS
+          predicates:
+            - Path=/api/productos/**, /api/servicios/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Chat
+        - id: chat
+          uri: lb://CHAT
+          predicates:
+            - Path=/api/chat/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Pagos
+        - id: pagos
+          uri: lb://ECOMARKET-SERVICIO-PAGOS
+          predicates:
+            - Path=/api/carrito/**, /api/pago/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Calificación y Reseñas
+        - id: calificacion-resenas
+          uri: lb://CALIFICACION-RESENAS
+          predicates:
+            - Path=/api/resenias/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Eventos
+        - id: eventos
+          uri: lb://ECOMARKET-SERVICIO-EVENTOS
+          predicates:
+            - Path=/api/eventos/**
+          filters:
+            - StripPrefix=1
+        
+        # Servicio Ofertas
+        - id: ofertas
+          uri: lb://ECOMARKET-SERVICIO-OFERTAS
+          predicates:
+            - Path=/api/ofertas/**
+          filters:
+            - StripPrefix=1
+
+server:
+    port: 8080
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
