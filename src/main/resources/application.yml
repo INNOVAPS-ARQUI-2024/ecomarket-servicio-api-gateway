@@ -28,7 +28,7 @@ eureka:
     prefer-ip-address: true
     
 server:
-    port: 8080
+    port: 7999
 
 logging:
   level:
