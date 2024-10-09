@@ -1,0 +1,52 @@
+name: Deploy to QA
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy-to-qa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      - name: Build Docker Image
+        run: docker build -t ecomarket-servicio-api-gateway:qa .
+
+      - name: Save Docker Image to Tar File
+        run: docker save ecomarket-servicio-api-gateway:qa -o ecomarket-servicio-api-gateway-qa.tar
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Copy Docker Image to QA Server
+        run: |
+          sshpass -p "${{ secrets.QA_SERVER_PASSWORD }}" scp -P ${{ secrets.QA_SERVER_PORT }} -o StrictHostKeyChecking=no ecomarket-servicio-api-gateway-qa.tar ${{ secrets.QA_SERVER_USER }}@${{ secrets.QA_SERVER_HOST }}:/tmp/ecomarket-servicio-api-gateway-qa.tar
+
+      - name: Run Deployment Script on QA Server
+        run: |
+          sshpass -p "${{ secrets.QA_SERVER_PASSWORD }}" ssh -p ${{ secrets.QA_SERVER_PORT }} -o StrictHostKeyChecking=no ${{ secrets.QA_SERVER_USER }}@${{ secrets.QA_SERVER_HOST }} "/home/estudiante/scripts/deploy_docker_image-ecomarket-servicio-api-gateway-qa.sh"
