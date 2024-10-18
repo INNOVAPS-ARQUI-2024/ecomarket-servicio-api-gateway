@@ -51,4 +51,4 @@ jobs:
 
       - name: Run Deployment Script on Production Server
         run: |
-          sshpass -p "${{ secrets.PROD_SERVER_PASSWORD }}" ssh -p ${{ secrets.PROD_SERVER_PORT }} -o StrictHostKeyChecking=no ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} "/home/estudiante/scripts/deploy_docker_image-ecomarket-servicio-api-gateway-prod.sh"
+          sshpass -p "${{ secrets.PROD_SERVER_PASSWORD }}" ssh -p ${{ secrets.PROD_SERVER_PORT }} -o StrictHostKeyChecking=no ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} "/home/estudiante/ecomarket-app-backend-springboot/scripts/PROD/deploy_docker_image-ecomarket-servicio-api-gateway-prod.sh"
