@@ -46,12 +46,6 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/comarket-servicio-api-gateway:prod
 
-      - name: Save Docker Image to Tar File
-        run: docker save ecomarket-servicio-api-gateway:prod -o ecomarket-servicio-api-gateway-prod.tar
-
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
       - name: Run Deployment Script on Production Server
         run: |
           sshpass -p "${{ secrets.PROD_SERVER_PASSWORD }}" ssh -p ${{ secrets.PROD_SERVER_PORT }} -o StrictHostKeyChecking=no ${{ secrets.PROD_SERVER_USER }}@${{ secrets.PROD_SERVER_HOST }} "/home/estudiante/scripts/deploy_docker_image-ecomarket-servicio-api-gateway-prod.sh"
