@@ -27,42 +27,36 @@ spring:
           uri: lb://ecomarket-servicio-control-usuarios
           predicates:
             - Path=/api/usuarios/**
-          filters:
         
         # Servicio Productos y Servicios
         - id: ecomarket-servicio-productos-servicios
           uri: lb://ecomarket-servicio-productos-servicios
           predicates:
             - Path=/api/productos/**, /api/servicios/**
-          filters:
-        
+
         # Servicio Pagos
         - id: ecomarket-servicio-pagos
           uri: lb://ecomarket-servicio-pagos
           predicates:
             - Path=/api/carrito/**, /api/pago/**
-          filters:
-        
+
         # Servicio Calificación y Reseñas
         - id: ecomarket-servicio-resenas
           uri: lb://ecomarket-servicio-resenas
           predicates:
             - Path=/api/resenias/**
-          filters:
-        
+
         # Servicio Eventos
         - id: ecomarket-servicio-eventos
           uri: lb://ecomarket-servicio-eventos
           predicates:
             - Path=/api/eventos/**
-          filters:
-        
+
         # Servicio Ofertas
         - id: ecomarket-servicio-ofertas
           uri: lb://ecomarket-servicio-ofertas
           predicates:
             - Path=/api/ofertas/**
-          filters:
 eureka:
   client:
     registerWithEureka: true
@@ -73,7 +67,7 @@ eureka:
     hostname: ecomarket-servicio-api-gateway
 
 server:
-    port: 7999
+  port: 7999
 
 logging:
   level:
