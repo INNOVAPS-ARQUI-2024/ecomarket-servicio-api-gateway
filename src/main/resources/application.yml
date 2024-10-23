@@ -7,7 +7,7 @@ spring:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost,http://localhost:80,http://ecomarket-app-frontend:80"
+            allowedOrigins: "http://localhost:80,http://ecomarket-app-frontend:80,http://localhost:4700,http://ecomarket-app-frontend:4700"
             allowedMethods:
               - GET
               - POST
