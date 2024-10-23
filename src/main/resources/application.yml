@@ -3,19 +3,75 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:80,http://ecomarket-app-frontend:80,http://localhost:4700,http://ecomarket-app-frontend:4700"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-
+      routes:
+        # Servicio Control de Usuarios
+        - id: ecomarket-servicio-control-usuarios
+          uri: lb://ecomarket-servicio-control-usuarios
+          predicates:
+            - Path=/api/usuarios/**
+          filters:
+        
+        # Servicio Productos y Servicios
+        - id: ecomarket-servicio-productos-servicios
+          uri: lb://ecomarket-servicio-productos-servicios
+          predicates:
+            - Path=/api/productos/**, /api/servicios/**
+          filters:
+        
+        # Servicio Pagos
+        - id: ecomarket-servicio-pagos
+          uri: lb://ecomarket-servicio-pagos
+          predicates:
+            - Path=/api/carrito/**, /api/pago/**
+          filters:
+        
+        # Servicio Calificación y Reseñas
+        - id: ecomarket-servicio-resenas
+          uri: lb://ecomarket-servicio-resenas
+          predicates:
+            - Path=/api/resenias/**
+          filters:
+        
+        # Servicio Eventos
+        - id: ecomarket-servicio-eventos
+          uri: lb://ecomarket-servicio-eventos
+          predicates:
+            - Path=/api/eventos/**
+          filters:
+        
+        # Servicio Ofertas
+        - id: ecomarket-servicio-ofertas
+          uri: lb://ecomarket-servicio-ofertas
+          predicates:
+            - Path=/api/ofertas/**
+          filters:
 eureka:
   client:
     registerWithEureka: true
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL:http://ecomarket-servicio-eureka-qa:8761/eureka/}
+      defaultZone: ${EUREKA_SERVER_URL:http://ecomarket-servicio-eureka:8761/eureka/}
   instance:
-    prefer-ip-address: true
-    
+    prefer-ip-address: false
+    hostname: ecomarket-servicio-api-gateway
+
 server:
     port: 7999
 
@@ -24,3 +80,8 @@ logging:
     org:
       springframework:
         security: DEBUG
+        cloud:
+          gateway: DEBUG
+          netflix:
+            eureka: DEBUG
+        web: DEBUG
