@@ -4,82 +4,84 @@ spring:
   cloud:
     gateway:
       globalcors:
-          cors-configurations:
-            '[/**]':
-              allowedOrigins: "http://localhost:4200"
-              allowedMethods:
-                - GET
-                - POST
-                - PUT
-                - DELETE
-              allowedHeaders: "*"
-              allowCredentials: true
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:80,http://ecomarket-app-frontend:80,http://localhost:4700,http://ecomarket-app-frontend:4700"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
       routes:
         # Servicio Control de Usuarios
-        - id: control-usuarios
-          uri: lb://ECOMARKET-SERVICIO-CONTROL-USUARIOS
+        - id: ecomarket-servicio-control-usuarios
+          uri: lb://ecomarket-servicio-control-usuarios
           predicates:
             - Path=/api/usuarios/**
           filters:
-            - StripPrefix=1
         
         # Servicio Productos y Servicios
-        - id: productos-servicios
-          uri: lb://ECOMARKET-SERVICIO-PRODUCTOS-SERVICIOS
+        - id: ecomarket-servicio-productos-servicios
+          uri: lb://ecomarket-servicio-productos-servicios
           predicates:
             - Path=/api/productos/**, /api/servicios/**
           filters:
-            - StripPrefix=1
-        
-        # Servicio Chat
-        - id: chat
-          uri: lb://CHAT
-          predicates:
-            - Path=/api/chat/**
-          filters:
-            - StripPrefix=1
         
         # Servicio Pagos
-        - id: pagos
-          uri: lb://ECOMARKET-SERVICIO-PAGOS
+        - id: ecomarket-servicio-pagos
+          uri: lb://ecomarket-servicio-pagos
           predicates:
             - Path=/api/carrito/**, /api/pago/**
           filters:
-            - StripPrefix=1
         
         # Servicio Calificación y Reseñas
-        - id: calificacion-resenas
-          uri: lb://CALIFICACION-RESENAS
+        - id: ecomarket-servicio-resenas
+          uri: lb://ecomarket-servicio-resenas
           predicates:
             - Path=/api/resenias/**
           filters:
-            - StripPrefix=1
         
         # Servicio Eventos
-        - id: eventos
-          uri: lb://ECOMARKET-SERVICIO-EVENTOS
+        - id: ecomarket-servicio-eventos
+          uri: lb://ecomarket-servicio-eventos
           predicates:
             - Path=/api/eventos/**
           filters:
-            - StripPrefix=1
         
         # Servicio Ofertas
-        - id: ofertas
-          uri: lb://ECOMARKET-SERVICIO-OFERTAS
+        - id: ecomarket-servicio-ofertas
+          uri: lb://ecomarket-servicio-ofertas
           predicates:
             - Path=/api/ofertas/**
           filters:
-            - StripPrefix=1
+eureka:
+  client:
+    registerWithEureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://ecomarket-servicio-eureka:8761/eureka/}
+  instance:
+    prefer-ip-address: false
+    hostname: ecomarket-servicio-api-gateway
 
 server:
-    port: 8080
+    port: 7999
 
 logging:
   level:
     org:
       springframework:
         security: DEBUG
+        cloud:
+          gateway: DEBUG
+          netflix:
+            eureka: DEBUG
+        web: DEBUG
