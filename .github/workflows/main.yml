@@ -41,7 +41,7 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Tag Docker Image
-        run: docker tag comarket-servicio-api-gateway:prod ${{ secrets.DOCKERHUB_USERNAME }}/comarket-servicio-api-gateway:prod
+        run: docker tag ecomarket-servicio-api-gateway:prod ${{ secrets.DOCKERHUB_USERNAME }}/ecomarket-servicio-api-gateway:prod
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/ecomarket-servicio-api-gateway:prod
